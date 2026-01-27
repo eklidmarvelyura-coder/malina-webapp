@@ -19,4 +19,3 @@ function sendFeedback() {
         alert('Ошибка: откройте Web App через Telegram');
     }
 }
-
