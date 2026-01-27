@@ -2,65 +2,31 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Malina Cafe</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <title>TEST WEB APP</title>
 </head>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src="script.js"></script>
 <body>
 
-    <h1>🍓 Malina Cafe Coffe</h1> 
+<h1>TEST WEB APP</h1>
 
-    <div>
-        <h2>Кофе</h2> 
+<button onclick="send()">SEND</button>
 
-        <div>
-            <h3>Капучино</h3>
-            <p>Нежный кофе с молочной пенкой</p>
-            <strong>250 ₽</strong>
-            <button>Добавить</button>
-        </div>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-        <div>
-            <h3>Латте</h3>
-            <p>Мягкий кофе с молоком</p>
-            <strong>280 ₽</strong>
-            <button>Добавить</button>
-        </div>
-        <div>
-            <h3>Американо</h3>
-            <p>Горьчкий черный кофе</p>
-            <strong>200 ₽</strong>
-            <button>Добавить</button>
-        </div>
-    </div>
+<script>
+    document.body.insertAdjacentHTML('beforeend', '<p>JS LOADED</p>');
 
-    <div>
-        <h2>Десерты</h2>
+    if (window.Telegram && Telegram.WebApp) {
+        document.body.insertAdjacentHTML('beforeend', '<p>TELEGRAM WEB APP DETECTED</p>');
+        Telegram.WebApp.ready();
+    } else {
+        document.body.insertAdjacentHTML('beforeend', '<p>NOT TELEGRAM WEB APP</p>');
+    }
 
-        <div>
-            <h3>Чизкейк</h3>
-            <p>Классический сливочный</p>
-            <strong>350 ₽</strong>
-            <button>Добавить</button>
-        </div>
-    </div>
-     <div>
-        <h2>Пирожки</h2>
+    function send() {
+        Telegram.WebApp.sendData('TEST MESSAGE');
+        Telegram.WebApp.close();
+    }
+</script>
 
-        <div>
-            <h3>С капустой</h3>
-            <p>Классический </p>
-            <strong>350 ₽</strong>
-            <button>Добавить</button>
-        </div>
-    </div>
-<h2>💬 Обратная связь</h2>
-
-<div>
-    <textarea id="feedbackText" placeholder="Напишите ваш отзыв или предложение"></textarea>
-    <button onclick="sendFeedback()">Отправить</button>
-</div>
 </body>
 </html>
