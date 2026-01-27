@@ -5,9 +5,18 @@ function sendFeedback() {
         alert('Пожалуйста, напишите сообщение');
         return;
     }
+
     if (window.Telegram && Telegram.WebApp) {
-        Telegram.WebApp.sendData(text);
-        Telegram.WebApp.close();
+        // Отправляем данные боту
+        Telegram.WebApp.sendData(JSON.stringify({
+            feedback: text,
+            user: Telegram.WebApp.initDataUnsafe.user?.username || 'неизвестный'
+        }));
+
+        alert('Спасибо за обратную связь!'); // пока не закрываем Web App
+        document.getElementById('feedbackText').value = '';
+    } else {
+        alert('Ошибка: откройте Web App через Telegram');
     }
 }
 
