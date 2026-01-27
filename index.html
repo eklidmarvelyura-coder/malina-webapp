@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <title>Web App Test</title>
+  <meta charset="UTF-8">
+  <title>WebApp Debug</title>
 </head>
 <body>
 
-<h2>Отзыв</h2>
-<textarea id="text" placeholder="Введите отзыв"></textarea>
+<h2>WEB APP DEBUG</h2>
+<textarea id="text" placeholder="Введите текст"></textarea>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <script>
-    Telegram.WebApp.ready();
+  Telegram.WebApp.ready();
 
-    Telegram.WebApp.MainButton.setText("Отправить отзыв");
-    Telegram.WebApp.MainButton.show();
+  document.body.insertAdjacentHTML('beforeend', '<p>MainButton should be visible below</p>');
 
-    Telegram.WebApp.MainButton.onClick(() => {
-        const text = document.getElementById('text').value;
+  Telegram.WebApp.MainButton.setText("ОТПРАВИТЬ В БОТА");
+  Telegram.WebApp.MainButton.show();
 
-        if (!text.trim()) {
-            alert('Введите текст');
-            return;
-        }
+  Telegram.WebApp.MainButton.onClick(() => {
+    const text = document.getElementById('text').value;
+    alert('MainButton clicked. Sending data.');
 
-        Telegram.WebApp.sendData(text);
-        Telegram.WebApp.close();
-    });
+    Telegram.WebApp.sendData(text || 'EMPTY');
+    Telegram.WebApp.close();
+  });
 </script>
 
 </body>
