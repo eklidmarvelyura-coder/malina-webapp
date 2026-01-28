@@ -1,24 +1,22 @@
-console.log('WebApp script loaded');
-
-if (window.Telegram && Telegram.WebApp) {
-    console.log('Telegram WebApp detected');
-    Telegram.WebApp.ready();
-} else {
-    console.log('NOT Telegram WebApp');
-}
 function sendFeedback() {
-    const text = document.getElementById('feedbackText').value;
+    const text = document.getElementById('text').value;
 
-    console.log('Button clicked');
-    console.log('Text:', text);
-
-    if (!window.Telegram || !Telegram.WebApp) {
-        alert('НЕ TELEGRAM WEB APP');
+    if (!text.trim()) {
+        alert('Введите текст');
         return;
     }
 
-    Telegram.WebApp.sendData(text);
-    Telegram.WebApp.close();
+    fetch('http://localhost:3000/feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text })
+    })
+    .then(() => {
+        alert('Отзыв отправлен 👍');
+    })
+    .catch(() => {
+        alert('Ошибка отправки');
+    });
 }
-
-
