@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Malina feedback</title>
+    <title>Malina Cafe Web App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Telegram WebApp API -->
@@ -15,145 +15,107 @@
         }
         textarea {
             width: 100%;
-            height: 120px;
+            height: 100px;
             font-size: 16px;
         }
         button {
             margin-top: 12px;
             width: 100%;
-            height: 48px;
-            font-size: 18px;
+            height: 44px;
+            font-size: 16px;
+        }
+        h2 {
+            margin-top: 20px;
+        }
+        #menu div, #cart div {
+            margin: 6px 0;
         }
     </style>
 </head>
 <body>
+
 <h2>Меню</h2>
 <div id="menu"></div>
 
 <h2>Корзина</h2>
-<div id="cart"></div>
+<div id="cart">Корзина пуста</div>
 <button onclick="sendOrder()">Отправить заказ</button>
+
 <h2>Обратная связь</h2>
-
-<textarea id="text" placeholder="Напишите ваш отзыв"></textarea>
-
-<button onclick="sendFeedback()">Отправить</button>
-
-
+<textarea id="feedbackText" placeholder="Напишите ваш отзыв"></textarea>
+<button onclick="sendFeedback()">Отправить отзыв</button>
 
 <script>
-    const products = [
-    { id: 1, name: "Американо", category: "Кофе", price: 120 },
-    { id: 2, name: "Капучино", category: "Кофе", price: 150 },
-    { id: 3, name: "Пирожок с капустой", category: "Пирожки", price: 80 }
-];
-const cart = [];
-
-function renderMenu() {
-    const menuDiv = document.getElementById('menu');
-    menuDiv.innerHTML = '';
-
-    products.forEach(p => {
-        const item = document.createElement('div');
-        item.innerHTML = `
-            ${p.name} - ${p.price} ₽
-            <button onclick="addToCart(${p.id})">В корзину</button>
-        `;
-        menuDiv.appendChild(item);
-    });
-}
-
-function addToCart(id) {
-    const product = products.find(p => p.id === id);
-    cart.push(product);
-    renderCart();
-}
-function sendOrder() {
-    if (cart.length === 0) {
-        tg.showAlert('Корзина пуста!');
-        return;
-    }
-
-    let message = '🛒 Новый заказ:\n\n';
-    let total = 0;
-    cart.forEach(p => {
-        message += `${p.name} - ${p.price} ₽\n`;
-        total += p.price;
-    });
-    message += `\n💰 Итого: ${total} ₽`;
-
-    fetch('https://malina-server.onrender.com/feedback', { // тот же сервер
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: message })
-    })
-    .then(() => {
-        tg.showAlert('Заказ отправлен!');
-        cart.length = 0;
-        renderCart();
-    })
-    .catch(() => tg.showAlert('Ошибка отправки заказа'));
-}
-function renderCart() {
-    const cartDiv = document.getElementById('cart');
-    cartDiv.innerHTML = '';
-
-    if (cart.length === 0) {
-        cartDiv.innerHTML = 'Корзина пуста';
-        return;
-    }
-
-    let total = 0;
-    cart.forEach((p, i) => {
-        total += p.price;
-        const div = document.createElement('div');
-        div.innerHTML = `${p.name} - ${p.price} ₽ <button onclick="removeFromCart(${i})">❌</button>`;
-        cartDiv.appendChild(div);
-    });
-
-    const totalDiv = document.createElement('div');
-    totalDiv.innerHTML = `<b>Итого: ${total} ₽</b>`;
-    cartDiv.appendChild(totalDiv);
-}
-
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    renderCart();
-}
-
-renderMenu();
-renderCart();
-
     const tg = window.Telegram.WebApp;
     tg.ready();
 
-    function sendFeedback() {
-        const text = document.getElementById('text').value;
+    // ======= Товары =======
+    const products = [
+        { id: 1, name: "Американо", category: "Кофе", price: 120 },
+        { id: 2, name: "Капучино", category: "Кофе", price: 150 },
+        { id: 3, name: "Пирожок с капустой", category: "Пирожки", price: 80 }
+    ];
 
-        if (!text.trim()) {
-            alert('Введите текст');
+    const cart = [];
+
+    // ======= Рендер меню =======
+    function renderMenu() {
+        const menuDiv = document.getElementById('menu');
+        menuDiv.innerHTML = '';
+
+        products.forEach(p => {
+            const item = document.createElement('div');
+            item.innerHTML = `${p.name} - ${p.price} ₽ 
+                <button onclick="addToCart(${p.id})">В корзину</button>`;
+            menuDiv.appendChild(item);
+        });
+    }
+
+    // ======= Добавление в корзину =======
+    function addToCart(id) {
+        const product = products.find(p => p.id === id);
+        cart.push(product);
+        renderCart();
+    }
+
+    // ======= Рендер корзины =======
+    function renderCart() {
+        const cartDiv = document.getElementById('cart');
+        cartDiv.innerHTML = '';
+
+        if (cart.length === 0) {
+            cartDiv.innerHTML = 'Корзина пуста';
             return;
         }
 
-        fetch('https://malina-server.onrender.com/feedback', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ text })
-        })
-        .then(() => {
-            tg.showAlert('Спасибо за отзыв! 👍');
-            document.getElementById('text').value = '';
-        })
-        .catch(() => {
-            tg.showAlert('Ошибка отправки');
+        let total = 0;
+        cart.forEach((p, i) => {
+            total += p.price;
+            const div = document.createElement('div');
+            div.innerHTML = `${p.name} - ${p.price} ₽ <button onclick="removeFromCart(${i})">❌</button>`;
+            cartDiv.appendChild(div);
         });
+
+        const totalDiv = document.createElement('div');
+        totalDiv.innerHTML = `<b>Итого: ${total} ₽</b>`;
+        cartDiv.appendChild(totalDiv);
     }
-</script>
 
-</body>
-</html>
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        renderCart();
+    }
 
+    renderMenu();
+    renderCart();
 
+    // ======= Отправка заказа =======
+    function sendOrder() {
+        if (cart.length === 0) {
+            tg.showAlert('Корзина пуста!');
+            return;
+        }
 
+        let message = '🛒 Новый заказ:\n\n';
+        let total = 0;
+        cart.forEach(p => {
