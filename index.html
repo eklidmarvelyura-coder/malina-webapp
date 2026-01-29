@@ -33,8 +33,21 @@
 <textarea id="text" placeholder="Напишите ваш отзыв"></textarea>
 
 <button onclick="sendFeedback()">Отправить</button>
+<h2>Меню</h2>
+<div id="menu"></div>
+
+<h2>Корзина</h2>
+<div id="cart"></div>
+<button onclick="sendOrder()">Отправить заказ</button>
+
 
 <script>
+    const products = [
+    { id: 1, name: "Американо", category: "Кофе", price: 120 },
+    { id: 2, name: "Капучино", category: "Кофе", price: 150 },
+    { id: 3, name: "Пирожок с капустой", category: "Пирожки", price: 80 }
+];
+
     const tg = window.Telegram.WebApp;
     tg.ready();
 
@@ -65,4 +78,3 @@
 
 </body>
 </html>
-
