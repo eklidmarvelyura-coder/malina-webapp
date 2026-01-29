@@ -119,3 +119,45 @@
         let message = '🛒 Новый заказ:\n\n';
         let total = 0;
         cart.forEach(p => {
+            message += `${p.name} - ${p.price} ₽\n`;
+            total += p.price;
+        });
+        message += `\n💰 Итого: ${total} ₽`;
+
+        fetch('https://malina-server.onrender.com/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: message, type: 'order' })
+        })
+        .then(() => {
+            tg.showAlert('Заказ отправлен!');
+            cart.length = 0;
+            renderCart();
+        })
+        .catch(() => tg.showAlert('Ошибка отправки заказа'));
+    }
+
+    // ======= Отправка отзыва =======
+    function sendFeedback() {
+        const text = document.getElementById('feedbackText').value.trim();
+
+        if (!text) {
+            tg.showAlert('Введите текст');
+            return;
+        }
+
+        fetch('https://malina-server.onrender.com/feedback', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text, type: 'review' })
+        })
+        .then(() => {
+            tg.showAlert('Спасибо за отзыв! 👍');
+            document.getElementById('feedbackText').value = '';
+        })
+        .catch(() => tg.showAlert('Ошибка отправки отзыва'));
+    }
+</script>
+
+</body>
+</html>
